@@ -80,6 +80,7 @@ final class Storage {
                         .append(',').append(src.getZ()).append(',');
                 line.append(door.getX()).append(',').append(door.getY())
                         .append(',').append(door.getZ()).append(',');
+		line.append(p.getRadius()).append(',');
                 line.append(dest).append(',');
                 line.append(p.isEnabled());
                 out.println(line);
@@ -126,7 +127,10 @@ final class Storage {
                 z = Double.parseDouble(tok);
                 door = new Location(plugin.getServer().getWorld(w), x, y, z);
 
-                Portal p = new Portal(name, src, door);
+                tok = tokenizer.nextToken();
+                int r = Integer.parseInt(tok);
+
+                Portal p = new Portal(name, src, door, radius);
 
                 tok = tokenizer.nextToken();
                 if (tok.equals("null")) {

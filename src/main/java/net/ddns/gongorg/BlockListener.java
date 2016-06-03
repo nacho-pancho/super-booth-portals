@@ -107,27 +107,28 @@ public class BlockListener implements org.bukkit.event.Listener {
     }
 
     /** portal may be 3x3, 5x5 or 7x7 */
-    private void seekPortal(Location doorLoc, BlockFace facing) {
+    private Portal seekPortal(Location doorLoc, BlockFace facing) {
         Block doorSign = null;
 	// for moving in directions relative to where the door is facing  
 	Vector back, left, right, front;
 	Vector up = new Vector(0,1,0);
 	Vector down = new Vector(0,-1,0);
+	plugin.log.debug("Seeking portal facing " + facing);
         switch (facing) {
-        case NORTH: // facing north, so booth is towards positive z
-	    back = new Vector(0,0,1);
+        case NORTH: // facing north, so booth is towards positive z, left is east (positive x)
+	    back = new Vector(0,0,+1);
+	    left = new Vector(+1,0,0);
+            break;
+        case SOUTH: // facing south, booth extends towards negative z, left is west (negative x)
+	    back = new Vector(0,0,-1);
 	    left = new Vector(-1,0,0);
             break;
-        case SOUTH:
-	    back = new Vector(0,0,-1);
-	    left = new Vector(1,0,0);
-            break;
-	case EAST:
+	case EAST: // facing east, booth extends towards west, left is south (positive z)
 	    back = new Vector(-1,0,0);
-	    left = new Vector(0,0, 1);
+	    left = new Vector(0,0,+1);
             break;
-        case WEST:
-	    back = new Vector(0,0,1);
+        case WEST: // facing west, booth extends to the east, left is north (neg z)
+	    back = new Vector(+1,0,0);
 	    left = new Vector(0,0,-1);
             break;
             default:
@@ -146,6 +147,12 @@ public class BlockListener implements org.bukkit.event.Listener {
             plugin.log.debug("No sign above door.");
             return null;
         }
+        String signName = String.join(" ", ((Sign)doorSign.getState()).getLines()).trim();
+        if (plugin.getPortal(signName) != null) {
+            plugin.log.debug("There is another sign with the name " + signName);
+            player.sendMessage(ChatColor.YELLOW + "sign_exists" + signName);
+            return;
+        }
         // check for inner sign, the one that points to the destination
         // it must be facing to the same side as the other sign
         //
@@ -155,10 +162,12 @@ public class BlockListener implements org.bukkit.event.Listener {
 	while (world.getBlockAt(innerSignLoc).getType() != Material.WALL_SIGN) {
 	    boothRadius++;
 	    innerSignLoc.add(back).add(back); // size increases by 2
-	    if (boothSize > BoothPlugin.MAX_BOOTH_SIZE) {
+	    if (boothRadius > BoothPlugin.MAX_BOOTH_RADIUS) {
+		plugin.log.debug("No booth wall beyond maximum radius " + (boothRadius-1));
 		return null; // no sign found within maximum allowed booth size
-	    }	    
+	    }
 	}
+	plugin.log.debug("Possible both with radius " + boothRadius);
         Block innerSign = world.getBlockAt(innerSignLoc);
         Sign signState = (Sign) innerSign.getState();
         plugin.log.debug("just to check, inner sign reads:" + String.join("\n", signState.getLines()));
@@ -168,42 +177,75 @@ public class BlockListener implements org.bukkit.event.Listener {
         Location l2 = innerSignLoc.clone().add(back);
 	Location l1 = l1.clone().add(down);
 	Location l3 = l1.clone().add(up);
+	if (!plugin.isBooth(l1.getBlock()) ||
+	    !plugin.isBooth(l2.getBlock()) ||
+	    !plugin.isBooth(l3.getBlock())) {
+	    return false;
+	}
 	Location r1 = l1.clone();
 	Location r2 = l2.clone();
 	Location r3 = l3.clone();
-	for (int i = 0; i <= boothRadius; i++) {
-	    
+	// check back wall
+	int i;
+	for (i = 1; i <= (boothRadius); i++) {
+	    l1.add(left); l2.add(left); l3.add(left);
+	    r1.add(right); r2.add(right); r3.add(right);
+	    if (!plugin.isBooth(l1.getBlock()) ||
+		!plugin.isBooth(l2.getBlock()) ||
+		!plugin.isBooth(l3.getBlock()) ||
+		!plugin.isBooth(r1.getBlock()) ||
+		!plugin.isBooth(r2.getBlock()) ||
+		!plugin.isBooth(r3.getBlock())) {
+		break;
+	    }
+	}
+	if (i < boothRadius) {
+	    return false; 
+	}
+	// check side walls
+	// we are past the corner; go back one step
+	for (i = 0; i <= (2*boothRadius); i++) {
+	    l1.add(front); l2.add(front); l3.add(front);
+	    r1.add(front); r2.add(front); r3.add(front);
+	    if (!plugin.isBooth(l1.getBlock()) ||
+		!plugin.isBooth(l2.getBlock()) ||
+		!plugin.isBooth(l3.getBlock()) ||
+		!plugin.isBooth(r1.getBlock()) ||
+		!plugin.isBooth(r2.getBlock()) ||
+		!plugin.isBooth(r3.getBlock())) {
+		break;
+	    }
 	} 
-	// check to the left
-	
+	if (i < (2*boothRadius)) {
+	    return false;
+	}
+	// check front wall
+	for (int i = 0; i <= (boothRadius-1); i++) {
+	    l1.add(right); l2.add(right); l3.add(right);
+	    r1.add(left); r2.add(left); r3.add(left);
+	    if (!plugin.isBooth(l1.getBlock()) ||
+		!plugin.isBooth(l2.getBlock()) ||
+		!plugin.isBooth(l3.getBlock()) ||
+		!plugin.isBooth(r1.getBlock()) ||
+		!plugin.isBooth(r2.getBlock()) ||
+		!plugin.isBooth(r3.getBlock())) {
+		break;
+	    }
+	} 
+	if (i < (boothRadius-1)) {
+	    return null;
+	}
+	// 
+	// we seem to have a complete wall for the booth
         //
-        // Name is obtained from door sign, and it must be unique!
-        //
-        String signName = String.join(" ", ((Sign)doorSign.getState()).getLines()).trim();
-        if (plugin.getPortal(signName) != null) {
-            plugin.log.debug("There is another sign with the name " + signName);
-            player.sendMessage(ChatColor.YELLOW + "sign_exists" + signName);
-            return;
-        }
-        //
-        // check for columns
-        //
-        if (    plugin.isBooth(world.getBlockAt(cx+1,cy  ,cz+1)) &&
-                plugin.isBooth(world.getBlockAt(cx+1,cy  ,cz-1)) &&
-                plugin.isBooth(world.getBlockAt(cx-1,cy  ,cz+1)) &&
-                plugin.isBooth(world.getBlockAt(cx-1,cy  ,cz-1)) &&
-                plugin.isBooth(world.getBlockAt(cx+1,cy+1,cz+1)) &&
-                plugin.isBooth(world.getBlockAt(cx+1,cy+1,cz-1)) &&
-                plugin.isBooth(world.getBlockAt(cx-1,cy+1,cz+1)) &&
-                plugin.isBooth(world.getBlockAt(cx-1,cy+1,cz-1))) {
-            plugin.log.debug("Congratulations! It is a portal!");
-            double tmp = 0.03125; // a little off centering so that so that roundings go towards correct place
-	    Portal newPortal = new Portal(signName,
-			     new Location(world, cx + 0.5 - tmp, cy+ tmp, cz + 0.5-tmp),
-			     new Location(world, dx, dy, dz));
-	    return newPortal;
-        }
-	return null;
+	// now determine portal center
+	//
+	Location centerLoc = doorLoc.clone();
+	back.multiply(boothRadius);
+	centerLoc.add(back);
+	plugin.log.debug("Portal walls check. Try adding it.");
+	double tmp = 0.03125; // a little off centering so that so that roundings go towards correct place
+	return new Portal(signName, centeroc, doorLoc, boothRadius);
     }
 
 }

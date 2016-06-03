@@ -7,13 +7,15 @@ public final class Portal implements java.io.Serializable {
     private boolean enabled = true;
     Location sourceLocation;
     Location doorLocation;
+    int radius;
     String name;
     String destinationName = null;
     
-    Portal(String name, Location src, Location door) {
+    Portal(String name, Location src, Location door, int radius) {
         this.sourceLocation = src;
         this.doorLocation = door;
         this.name = name;
+	this.radius = radius;
         this.destinationName = null;
     }
 
@@ -54,6 +56,8 @@ public final class Portal implements java.io.Serializable {
     Location getDoorLocation() {
         return doorLocation;
     }
+
+    int getRadius() { return radius; }
 
     String getDestinationName() {
         return destinationName;
@@ -114,6 +118,7 @@ public final class Portal implements java.io.Serializable {
         final int y = l.getBlockY();
         final int z = l.getBlockZ();
         return (x == sourceLocation.getBlockX()) && (z == sourceLocation.getBlockZ())
-                && (y >= sourceLocation.getBlockY()) && (y <= (sourceLocation.getBlockY() + 1));
+                && (y >= sourceLocation.getBlockY()) && (y <= (sourceLocation.getBlockY() + 2));
     }
+
 }
