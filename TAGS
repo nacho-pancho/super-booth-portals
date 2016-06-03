@@ -1,0 +1,103 @@
+
+net/ddns/gongorg/Storage.java,511
+final class Storage 10,151
+    private final BoothPortals plugin;Storage.plugin12,174
+    private final String dataFile;Storage.dataFile13,213
+    private final String backupFile;Storage.backupFile14,248
+    Storage(Storage.Storage16,286
+    void save(Storage.save30,755
+    @SuppressWarnings(Storage.@SuppressWarnings41,1098
+    void saveCSV(Storage.saveCSV55,1611
+    void backupCSV(Storage.backupCSV59,1666
+    void saveCSV(Storage.saveCSV67,1842
+    void loadCSV(Storage.loadCSV93,3067
+
+net/ddns/gongorg/PlayerListener.java,446
+public class PlayerListener 19,468
+    private final BoothPortals plugin;PlayerListener.plugin20,518
+    public PlayerListener(PlayerListener.PlayerListener28,668
+    public void onEvent(PlayerListener.onEvent37,946
+    private void handleDoorEvent(PlayerListener.handleDoorEvent54,1536
+    private void handleBreakEvent(PlayerListener.handleBreakEvent144,4827
+    private void handleSignEvent(PlayerListener.handleSignEvent176,5862
+
+net/ddns/gongorg/Portal.java,1183
+public final class Portal 5,56
+    private static final long serialVersionUID Portal.serialVersionUID6,116
+    private boolean enabled Portal.enabled7,169
+    Location sourceLocation;Portal.sourceLocation8,205
+    Location doorLocation;Portal.doorLocation9,234
+    String name;Portal.name10,261
+    String destinationName Portal.destinationName11,278
+    Portal(Portal.Portal13,318
+    public boolean equals(Portal.equals20,512
+    String printXYZ(Portal.printXYZ36,1083
+    public String toString(Portal.toString41,1239
+    Location getSourceLocation(Portal.getSourceLocation46,1385
+    String getName(Portal.getName50,1458
+    Location getDoorLocation(Portal.getDoorLocation54,1513
+    String getDestinationName(Portal.getDestinationName58,1582
+    boolean hasDestination(Portal.hasDestination62,1655
+    void setDestinationName(Portal.setDestinationName66,1733
+    boolean isEnabled(Portal.isEnabled70,1820
+    void enable(Portal.enable74,1877
+    void disable(Portal.disable78,1933
+    boolean isBoothBlock(Portal.isBoothBlock82,1993
+    boolean isDoorBlock(Portal.isDoorBlock102,2809
+    boolean isInterior(Portal.isInterior112,3170
+
+net/ddns/gongorg/BoothPortals.java,1639
+public class BoothPortals 19,466
+    public Logger log;BoothPortals.log25,653
+    private String pluginName;BoothPortals.pluginName26,676
+    private static final String permissionNode BoothPortals.permissionNode27,707
+    private String pluginVersion;BoothPortals.pluginVersion29,774
+    private ResourceBundle i18nResource;BoothPortals.i18nResource30,808
+    final int maxBoothRadius BoothPortals.maxBoothRadius32,850
+    private final Material boothMaterial BoothPortals.boothMaterial33,884
+    TreeMap<BoothPortals.TreeMap34,952
+    TreeMap<String,Portal> portals BoothPortals.portals34,952
+    Storage storage;BoothPortals.storage35,1019
+    private boolean suspended BoothPortals.suspended37,1041
+    public void onLoad(BoothPortals.onLoad39,1081
+    void configurePlugin(BoothPortals.configurePlugin45,1282
+    public void onEnable(BoothPortals.onEnable58,1928
+    public void onDisable(BoothPortals.onDisable69,2377
+    boolean isSuspended(BoothPortals.isSuspended73,2441
+    void suspendPortals(BoothPortals.suspendPortals77,2502
+    void resumePortals(BoothPortals.resumePortals81,2563
+    boolean isDoor(BoothPortals.isDoor85,2624
+    boolean isBooth(BoothPortals.isBooth94,2944
+    Portal getPortalAt(BoothPortals.getPortalAt98,3027
+    Portal getPortal(BoothPortals.getPortal105,3199
+    Location getDestination(BoothPortals.getDestination113,3377
+    boolean hasPermission(BoothPortals.hasPermission128,3774
+    void addPortal(BoothPortals.addPortal132,3909
+    void removePortal(BoothPortals.removePortal137,4078
+    String listPortals(BoothPortals.listPortals153,4765
+
+net/ddns/gongorg/BlockListener.java,281
+public class BlockListener 23,580
+    private final BoothPortals plugin;BlockListener.plugin24,646
+    public BlockListener(BlockListener.BlockListener33,794
+    @EventHandler(BlockListener.@EventHandler60,1870
+    private void seekPortal(BlockListener.seekPortal110,3491
+
+net/ddns/gongorg/CommandExecutor.java,298
+public class CommandExecutor 13,242
+    private final BoothPortals plugin;CommandExecutor.plugin14,319
+    public CommandExecutor(CommandExecutor.CommandExecutor16,359
+    public boolean onCommand(CommandExecutor.onCommand22,490
+    private void printHelp(CommandExecutor.printHelp72,2727
+
+net/ddns/gongorg/Logger.java,432
+class Logger 9,184
+    private static final java.util.logging.Logger logger Logger.logger11,200
+    private final String pluginName;Logger.pluginName14,322
+    boolean debugMode Logger.debugMode15,359
+    Logger(Logger.Logger17,391
+    void warning(Logger.warning28,628
+    void info(Logger.info38,818
+    void severe(Logger.severe48,1003
+    void debug(Logger.debug58,1213
+    private void log(Logger.log71,1496

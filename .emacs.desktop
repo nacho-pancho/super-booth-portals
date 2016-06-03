@@ -1,0 +1,95 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Fri Jun  3 14:49:14 2016
+;; Desktop file format version 206
+;; Emacs version 24.3.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("~/workspace/super-booth-portals/"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Logger.java"
+  "Logger.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/CommandExecutor.java"
+  "CommandExecutor.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/BlockListener.java"
+  "BlockListener.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/BoothPortals.java"
+  "BoothPortals.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Portal.java"
+  "Portal.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/PlayerListener.java"
+  "PlayerListener.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Storage.java"
+  "Storage.java"
+  'java-mode
+  '(abbrev-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
