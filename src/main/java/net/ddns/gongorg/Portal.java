@@ -35,9 +35,15 @@ public final class Portal implements java.io.Serializable {
                 && Math.abs(az - bz) < 1.0;
     }
 
-    String printXYZ(Location l) {
+    private static String printXYZ(Location l) {
         return (l == null) ? "nowhere" : "(" + l.getX() + ", " + l.getY()
                 + ", " + l.getZ() + ")";
+    }
+
+    final double distXZ(Location l) {
+	final double ax = Math.abs(l.getX() - sourceLocation.getX());
+	final double az = Math.abs(l.getZ() - sourceLocation.getZ());
+	return ax > az ? ax : az;
     }
 
     public String toString() {

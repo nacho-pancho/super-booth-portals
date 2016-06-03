@@ -130,7 +130,7 @@ final class Storage {
                 tok = tokenizer.nextToken();
                 int r = Integer.parseInt(tok);
 
-                Portal p = new Portal(name, src, door, radius);
+                Portal p = new Portal(name, src, door, r);
 
                 tok = tokenizer.nextToken();
                 if (tok.equals("null")) {

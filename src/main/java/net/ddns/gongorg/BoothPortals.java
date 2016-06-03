@@ -29,8 +29,8 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
     private String pluginVersion;
     private ResourceBundle i18nResource;
 
-    final int maxBoothRadius = 5;
-    private final Material boothMaterial = Material.REDSTONE_BLOCK;
+    int maxBoothRadius = 5;
+    private Material boothMaterial = Material.REDSTONE_BLOCK;
     TreeMap<String,Portal> portals = new TreeMap<String,Portal>();
     Storage storage;
 
@@ -53,6 +53,12 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
         log.info("Locale set to " + language + " " + country);
         final Locale locale = new Locale(language, country);
         i18nResource = ResourceBundle.getBundle("Messages", locale);
+	maxBoothRadius = conf.getInt("max_booth_radius",5);
+	String materialName = conf.getString("booth_material","REDSTONE_BLOCK");
+	boothMaterial = Material.getMaterial(materialName);
+	if (boothMaterial == null) {
+	    boothMaterial = Material.QUARTZ_BLOCK;
+	}
     }
 
     public void onEnable() {
@@ -116,22 +122,12 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
                 destPortal.getSourceLocation() : null;
     }
     
-    
-//    boolean isPortalDoor(org.bukkit.Location l) {
-//        for (Portal p : portals) {
-//            if (p.isDoorBlock(l))
-//                return true;
-//        }
-//        return false;
-//    }
-
     boolean hasPermission(Player player, String permission) {
         return player.hasPermission(permissionNode + permission);
     }
 
-    void addPortal(String name, Location centerLoc, Location doorLoc) {
-        Portal p = new Portal(name,centerLoc, doorLoc);
-        this.portals.put(name,p);
+    void addPortal(Portal p) {
+        this.portals.put(p.getName(),p);
     }
 
     void removePortal(String name) {

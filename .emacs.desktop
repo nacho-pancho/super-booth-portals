@@ -2,7 +2,7 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Fri Jun  3 14:49:14 2016
+;; Created Fri Jun  3 15:44:42 2016
 ;; Desktop file format version 206
 ;; Emacs version 24.3.1
 
@@ -17,7 +17,7 @@
 
 ;; Buffer section -- buffers listed in same order as in buffer list:
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Logger.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/Logger.java"
   "Logger.java"
   'java-mode
   '(abbrev-mode)
@@ -28,7 +28,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/CommandExecutor.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/CommandExecutor.java"
   "CommandExecutor.java"
   'java-mode
   '(abbrev-mode)
@@ -39,7 +39,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/BlockListener.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/BlockListener.java"
   "BlockListener.java"
   'java-mode
   '(abbrev-mode)
@@ -50,7 +50,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/BoothPortals.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/BoothPortals.java"
   "BoothPortals.java"
   'java-mode
   '(abbrev-mode)
@@ -61,7 +61,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Portal.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/Portal.java"
   "Portal.java"
   'java-mode
   '(abbrev-mode)
@@ -72,7 +72,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/PlayerListener.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/PlayerListener.java"
   "PlayerListener.java"
   'java-mode
   '(abbrev-mode)
@@ -83,7 +83,7 @@
   '((buffer-file-coding-system . undecided-unix)))
 
 (desktop-create-buffer 206
-  "/home/nacho/workspace/super-booth-portals/net/ddns/gongorg/Storage.java"
+  "/home/nacho/workspace/super-booth-portals/src/main/java/net/ddns/gongorg/Storage.java"
   "Storage.java"
   'java-mode
   '(abbrev-mode)

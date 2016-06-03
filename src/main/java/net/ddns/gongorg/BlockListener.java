@@ -6,6 +6,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.BlockFace;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -82,9 +83,32 @@ public class BlockListener implements org.bukkit.event.Listener {
         if (!plugin.isDoor(block))
             return;
         
-        //
-        // may be a portal
-        //
+
+	Portal newPortal = seekPortal(event);
+
+	if (newPortal != null) {
+	    plugin.addPortal(newPortal);
+	}
+    }
+
+    private final void debugLoc(String prefix, Location l) {  // only for debugging
+	java.text.DecimalFormat nf = new java.text.DecimalFormat("#####");
+	StringBuffer sb = new StringBuffer(prefix);
+	sb.append("=(");
+	sb.append(nf.format(l.getX())).append(',');
+	sb.append(nf.format(l.getY())).append(',');
+	sb.append(nf.format(l.getY())).append(',');
+	sb.append(')');
+	plugin.log.debug(sb.toString());
+    }
+
+    /** portal may be 3x3, 5x5 or 7x7 */
+    private Portal seekPortal(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        Location doorLoc = block.getLocation();
+        World world = player.getWorld();
+
         // data unique to doors
         org.bukkit.material.Door doorData = (org.bukkit.material.Door) block.getState().getData(); 
         if (doorData.isTopHalf()) { // top half of door does not contain valid information
@@ -99,15 +123,6 @@ public class BlockListener implements org.bukkit.event.Listener {
         // further checks are done depending on that
         //
         BlockFace facing =  doorData.getFacing();
-
-	Portal newPortal = seekPortal(doorLoc,facing);
-	if (newPortal != null) {
-	    plugin.addPortal(newPortal);
-	}
-    }
-
-    /** portal may be 3x3, 5x5 or 7x7 */
-    private Portal seekPortal(Location doorLoc, BlockFace facing) {
         Block doorSign = null;
 	// for moving in directions relative to where the door is facing  
 	Vector back, left, right, front;
@@ -132,6 +147,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	    left = new Vector(0,0,-1);
             break;
             default:
+		return null;
                 // cannot be
         }
 	right = left.clone();
@@ -151,7 +167,7 @@ public class BlockListener implements org.bukkit.event.Listener {
         if (plugin.getPortal(signName) != null) {
             plugin.log.debug("There is another sign with the name " + signName);
             player.sendMessage(ChatColor.YELLOW + "sign_exists" + signName);
-            return;
+            return null;
         }
         // check for inner sign, the one that points to the destination
         // it must be facing to the same side as the other sign
@@ -162,7 +178,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	while (world.getBlockAt(innerSignLoc).getType() != Material.WALL_SIGN) {
 	    boothRadius++;
 	    innerSignLoc.add(back).add(back); // size increases by 2
-	    if (boothRadius > BoothPlugin.MAX_BOOTH_RADIUS) {
+	    if (boothRadius > plugin.maxBoothRadius) {
 		plugin.log.debug("No booth wall beyond maximum radius " + (boothRadius-1));
 		return null; // no sign found within maximum allowed booth size
 	    }
@@ -175,19 +191,22 @@ public class BlockListener implements org.bukkit.event.Listener {
 	// found sign and potential booth radius. Now scan for booth structure
 	//
         Location l2 = innerSignLoc.clone().add(back);
-	Location l1 = l1.clone().add(down);
-	Location l3 = l1.clone().add(up);
+	Location l1 = l2.clone().add(down);
+	Location l3 = l2.clone().add(up);
 	if (!plugin.isBooth(l1.getBlock()) ||
 	    !plugin.isBooth(l2.getBlock()) ||
 	    !plugin.isBooth(l3.getBlock())) {
-	    return false;
+	    debugLoc("No booth at l1=",l1);
+	    return null;
 	}
 	Location r1 = l1.clone();
 	Location r2 = l2.clone();
 	Location r3 = l3.clone();
-	// check back wall
+	// check back wall, determine radius
 	int i;
-	for (i = 1; i <= (boothRadius); i++) {
+	plugin.log.debug("Checking back wall starting at ");
+	debugLoc(" l2=",l2);
+	for (i = 1; i <= boothRadius; i++) {
 	    l1.add(left); l2.add(left); l3.add(left);
 	    r1.add(right); r2.add(right); r3.add(right);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -196,11 +215,13 @@ public class BlockListener implements org.bukkit.event.Listener {
 		!plugin.isBooth(r1.getBlock()) ||
 		!plugin.isBooth(r2.getBlock()) ||
 		!plugin.isBooth(r3.getBlock())) {
+		plugin.log.debug("i=" + i);
+		debugLoc("No booth at l1=", l1);
 		break;
 	    }
 	}
 	if (i < boothRadius) {
-	    return false; 
+	    return null; 
 	}
 	// check side walls
 	// we are past the corner; go back one step
@@ -217,10 +238,10 @@ public class BlockListener implements org.bukkit.event.Listener {
 	    }
 	} 
 	if (i < (2*boothRadius)) {
-	    return false;
+	    return null;
 	}
 	// check front wall
-	for (int i = 0; i <= (boothRadius-1); i++) {
+	for (i = 0; i <= (boothRadius-1); i++) {
 	    l1.add(right); l2.add(right); l3.add(right);
 	    r1.add(left); r2.add(left); r3.add(left);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -245,7 +266,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	centerLoc.add(back);
 	plugin.log.debug("Portal walls check. Try adding it.");
 	double tmp = 0.03125; // a little off centering so that so that roundings go towards correct place
-	return new Portal(signName, centeroc, doorLoc, boothRadius);
+	return new Portal(signName, centerLoc, doorLoc, boothRadius);
     }
 
 }
