@@ -53,12 +53,13 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
         log.info("Locale set to " + language + " " + country);
         final Locale locale = new Locale(language, country);
         i18nResource = ResourceBundle.getBundle("Messages", locale);
-	maxBoothRadius = conf.getInt("max_booth_radius",5);
-	String materialName = conf.getString("booth_material","REDSTONE_BLOCK");
-	boothMaterial = Material.getMaterial(materialName);
-	if (boothMaterial == null) {
-	    boothMaterial = Material.QUARTZ_BLOCK;
-	}
+		maxBoothRadius = conf.getInt("max_booth_radius",5);
+		String materialName = conf.getString("booth_material","QUARTZ_BLOCK");
+		boothMaterial = Material.getMaterial(materialName);
+		if (boothMaterial == null) {
+		    boothMaterial = Material.QUARTZ_BLOCK;
+		}
+	log.debug("Booth material is " + boothMaterial);
     }
 
     public void onEnable() {
@@ -103,7 +104,10 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
 
     Portal getPortalAt(org.bukkit.Location l) {
         for (Portal p: portals.values()) {
-            if (p.isInterior(l)) return p;
+            if (p.isInterior(l)) { 
+		log.debug("Inside " + p);
+		return p;
+	    }
         }
         return null;
     }
@@ -127,6 +131,7 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     void addPortal(Portal p) {
+	log.debug("Adding new portal of radius " + p.getRadius() + ": " + p);
         this.portals.put(p.getName(),p);
     }
 

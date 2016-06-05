@@ -1,5 +1,5 @@
 name: SuperBoothPortals
-main: net.ddns.gongorg.SuperBoothPortals
+main: net.ddns.gongorg.BoothPortals
 version: 0.1
 commands: 
   booth:

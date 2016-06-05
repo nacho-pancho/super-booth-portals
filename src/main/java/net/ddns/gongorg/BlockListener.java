@@ -86,7 +86,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 
 	Portal newPortal = seekPortal(event);
 
-	if (newPortal != null) {
+	if (newPortal != null) {	    
 	    plugin.addPortal(newPortal);
 	}
     }
@@ -97,7 +97,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	sb.append("=(");
 	sb.append(nf.format(l.getX())).append(',');
 	sb.append(nf.format(l.getY())).append(',');
-	sb.append(nf.format(l.getY())).append(',');
+	sb.append(nf.format(l.getZ())).append(',');
 	sb.append(')');
 	plugin.log.debug(sb.toString());
     }
@@ -108,6 +108,9 @@ public class BlockListener implements org.bukkit.event.Listener {
         Block block = event.getBlock();
         Location doorLoc = block.getLocation();
         World world = player.getWorld();
+	doorLoc.setX(doorLoc.getBlockX());
+	doorLoc.setY(doorLoc.getBlockY());
+	doorLoc.setZ(doorLoc.getBlockZ());
 
         // data unique to doors
         org.bukkit.material.Door doorData = (org.bukkit.material.Door) block.getState().getData(); 
@@ -196,7 +199,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	if (!plugin.isBooth(l1.getBlock()) ||
 	    !plugin.isBooth(l2.getBlock()) ||
 	    !plugin.isBooth(l3.getBlock())) {
-	    debugLoc("No booth at l1=",l1);
+	    debugLoc("No booth at l2=",l2);
 	    return null;
 	}
 	Location r1 = l1.clone();
@@ -216,16 +219,21 @@ public class BlockListener implements org.bukkit.event.Listener {
 		!plugin.isBooth(r2.getBlock()) ||
 		!plugin.isBooth(r3.getBlock())) {
 		plugin.log.debug("i=" + i);
-		debugLoc("No booth at l1=", l1);
+		debugLoc("No booth either at l2=", l2);
+		debugLoc("or at r2=", r2);
 		break;
 	    }
 	}
 	if (i < boothRadius) {
+	    plugin.log.debug("Failed back wall check.");
 	    return null; 
 	}
+	plugin.log.debug("Checking side walls starting at ");
+	debugLoc(" l2=",l2);
+	debugLoc(" r2=",r2);
 	// check side walls
 	// we are past the corner; go back one step
-	for (i = 0; i <= (2*boothRadius); i++) {
+	for (i = 1; i <= (2*boothRadius); i++) {
 	    l1.add(front); l2.add(front); l3.add(front);
 	    r1.add(front); r2.add(front); r3.add(front);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -234,14 +242,20 @@ public class BlockListener implements org.bukkit.event.Listener {
 		!plugin.isBooth(r1.getBlock()) ||
 		!plugin.isBooth(r2.getBlock()) ||
 		!plugin.isBooth(r3.getBlock())) {
+		debugLoc("No booth either at l2=", l2);
+		debugLoc("or at r2=", r2);
 		break;
 	    }
 	} 
 	if (i < (2*boothRadius)) {
+	    plugin.log.debug("Failed side wall check.");
 	    return null;
 	}
+	plugin.log.debug("Checking front walls starting at ");
+	debugLoc(" l2=",l2);
+	debugLoc(" r2=",r2);
 	// check front wall
-	for (i = 0; i <= (boothRadius-1); i++) {
+	for (i = 1; i <= (boothRadius-1); i++) {
 	    l1.add(right); l2.add(right); l3.add(right);
 	    r1.add(left); r2.add(left); r3.add(left);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -254,6 +268,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	    }
 	} 
 	if (i < (boothRadius-1)) {
+	    plugin.log.debug("Failed front wall check.");
 	    return null;
 	}
 	// 
@@ -265,8 +280,7 @@ public class BlockListener implements org.bukkit.event.Listener {
 	back.multiply(boothRadius);
 	centerLoc.add(back);
 	plugin.log.debug("Portal walls check. Try adding it.");
-	double tmp = 0.03125; // a little off centering so that so that roundings go towards correct place
-	return new Portal(signName, centerLoc, doorLoc, boothRadius);
+	return new Portal(signName, centerLoc, doorLoc);
     }
 
 }

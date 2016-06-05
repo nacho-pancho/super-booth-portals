@@ -71,4 +71,16 @@ class Logger {
     private void log(Object message, Level level) {
         logger.log(level, "[" + pluginName + "] " + message);
     }
+
+    void debugLoc(String prefix, org.bukkit.Location l) {  // only for debugging
+	java.text.DecimalFormat nf = new java.text.DecimalFormat("#####");
+	StringBuffer sb = new StringBuffer(prefix);
+	sb.append("=(");
+	sb.append(nf.format(l.getX())).append(',');
+	sb.append(nf.format(l.getY())).append(',');
+	sb.append(nf.format(l.getZ())).append(',');
+	sb.append(')');
+	debug(sb.toString());
+    }
+
 }

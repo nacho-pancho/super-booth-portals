@@ -5,17 +5,17 @@ import org.bukkit.Location;
 public final class Portal implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     private boolean enabled = true;
-    Location sourceLocation;
-    Location doorLocation;
-    int radius;
-    String name;
+    final Location sourceLocation;
+    final Location doorLocation;
+    final int radius;
+    final String name;
     String destinationName = null;
     
-    Portal(String name, Location src, Location door, int radius) {
+    Portal(String name, Location src, Location door) {
         this.sourceLocation = src;
         this.doorLocation = door;
         this.name = name;
-	this.radius = radius;
+	this.radius = (int) distXZ(doorLocation);
         this.destinationName = null;
     }
 
@@ -47,12 +47,12 @@ public final class Portal implements java.io.Serializable {
     }
 
     public String toString() {
-        return "Portal at " + printXYZ(sourceLocation) + ". goes from " + name + " to " + destinationName;
+        return "Portal at " + printXYZ(sourceLocation) + ", radius " + getRadius() + ", from " + name + " to " + destinationName ;
 
     }
 
     Location getSourceLocation() {
-        return sourceLocation;
+        return sourceLocation.clone();
     }
 
     String getName() {
@@ -60,7 +60,7 @@ public final class Portal implements java.io.Serializable {
     }
     
     Location getDoorLocation() {
-        return doorLocation;
+        return doorLocation.clone();
     }
 
     int getRadius() { return radius; }
@@ -90,23 +90,11 @@ public final class Portal implements java.io.Serializable {
     }
 
     boolean isBoothBlock(Location l) {
-        final int x = l.getBlockX();
         final int y = l.getBlockY();
-        final int z = l.getBlockZ();
-        final int cx = this.sourceLocation.getBlockX();
         final int cy = this.sourceLocation.getBlockY();
-        final int cz = this.sourceLocation.getBlockZ();
-        if ((y < cy) || (y - cy > 1))
+        if ((y < cy) || (y - cy > 2))
             return false; // too high or low
-        // if ((x == doorLocation.getBlockX()) && (z ==
-        // doorLocation.getBlockZ())) return true; // it might be door
-        final int dx = (int) Math.abs(x - cx);
-        final int dz = (int) Math.abs(z - cz);
-        if (dx >= 2 || dz >= 2)
-            return false; // too far
-        if (dx + dz <= 1)
-            return false; // now only remaining option is 2 (a column)
-        return true;
+	return distXZ(l) == radius;
     }
 
     boolean isDoorBlock(Location l) {
@@ -120,11 +108,9 @@ public final class Portal implements java.io.Serializable {
     }
 
     boolean isInterior(Location l) {
-        final int x = l.getBlockX();
         final int y = l.getBlockY();
-        final int z = l.getBlockZ();
-        return (x == sourceLocation.getBlockX()) && (z == sourceLocation.getBlockZ())
-                && (y >= sourceLocation.getBlockY()) && (y <= (sourceLocation.getBlockY() + 2));
+        return  (y >= sourceLocation.getBlockY()) && (y <= (sourceLocation.getBlockY() + 2)) &&
+	    distXZ(l) < radius;
     }
 
 }

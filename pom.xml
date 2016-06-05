@@ -3,20 +3,27 @@
   <modelVersion>4.0.0</modelVersion>
  
   <groupId>net.ddns.gongorg</groupId>
-  <artifactId>SuperBoothsPlugin</artifactId>
+  <artifactId>SuperBoothPortals</artifactId>
   <version>0.1</version>
   <packaging>jar</packaging>
   
-  <name>SuperBooths Plugin for Bukkit</name>
+  <name>SuperBoothPortals Plugin for Bukkit</name>
   <url>http://maven.apache.org</url>
    <dependencies>  
      <dependency>
        <groupId>org.bukkit</groupId>
        <artifactId>craftbukkit</artifactId>
-       <version>1.9-R0.1-SNAPSHOT</version>
+       <version>1.9.4-R0.1-SNAPSHOT</version>
        <scope>compile</scope>
     </dependency>
   </dependencies>
+
+<repositories>
+      <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
+    </repository>
+</repositories>
 
   <build>
     <plugins>
