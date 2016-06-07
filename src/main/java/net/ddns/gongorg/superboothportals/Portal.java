@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 import org.bukkit.Location;
 

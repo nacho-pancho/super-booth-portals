@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 //import org.bukkit.configuration.file.FileConfiguration;
 //import org.bukkit.entity.Player;
 
-public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
+public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
 
     // private ArrayList<Material> doorTypes = new ArrayList<Material>();
     /**
@@ -24,7 +24,7 @@ public class BoothPortals extends org.bukkit.plugin.java.JavaPlugin {
      */
     public Logger log;
     private String pluginName;
-    private static final String permissionNode = "boothportals.";
+    private static final String permissionNode = "superboothportals.";
 
     private String pluginVersion;
     private ResourceBundle i18nResource;

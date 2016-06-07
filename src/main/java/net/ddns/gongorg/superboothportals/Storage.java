@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,11 +9,11 @@ import org.bukkit.Location;
 
 final class Storage {
 
-    private final BoothPortals plugin;
+    private final SuperBoothPortals plugin;
     private final String dataFile;
     private final String backupFile;
 
-    Storage(BoothPortals plugin) {
+    Storage(SuperBoothPortals plugin) {
         this.plugin = plugin;
         File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) {

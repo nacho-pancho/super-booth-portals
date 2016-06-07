@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author Ignacio Ramirez <nacho@fing.edu.uy>
  */
 public class PlayerListener implements Listener {
-    private final BoothPortals plugin;
+    private final SuperBoothPortals plugin;
 
     /**
      * Constructor.
@@ -27,7 +27,7 @@ public class PlayerListener implements Listener {
      * @param instance
      *            The plugin to attach to.
      */
-    public PlayerListener(BoothPortals instance) {
+    public PlayerListener(SuperBoothPortals instance) {
         plugin = instance;
     }
 

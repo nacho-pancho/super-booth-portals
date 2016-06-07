@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -11,9 +11,9 @@ import org.bukkit.ChatColor;
  * @author You
  */
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
-    private final BoothPortals plugin;
+    private final SuperBoothPortals plugin;
 
-    public CommandExecutor(BoothPortals instance) {
+    public CommandExecutor(SuperBoothPortals instance) {
         plugin = instance;
     }
 

@@ -1,4 +1,4 @@
-package net.ddns.gongorg;
+package net.ddns.gongorg.superboothportals;
 
 //import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -22,7 +22,7 @@ import org.bukkit.util.Vector;
  * @author cppchriscpp
  */
 public class BlockListener implements org.bukkit.event.Listener {
-    private final BoothPortals plugin;
+    private final SuperBoothPortals plugin;
 
 
     /**
@@ -31,7 +31,7 @@ public class BlockListener implements org.bukkit.event.Listener {
      * @param plugin
      *            The plugin to attach to.
      */
-    public BlockListener(final BoothPortals plugin) {
+    public BlockListener(final SuperBoothPortals plugin) {
         this.plugin = plugin;
     }
 
