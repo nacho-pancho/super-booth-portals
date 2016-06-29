@@ -76,6 +76,7 @@ class Logger {
 	java.text.DecimalFormat nf = new java.text.DecimalFormat("#####");
 	StringBuffer sb = new StringBuffer(prefix);
 	sb.append("=(");
+	sb.append("\"").append(l.getWorld().getName()).append("\"").append(',');
 	sb.append(nf.format(l.getX())).append(',');
 	sb.append(nf.format(l.getY())).append(',');
 	sb.append(nf.format(l.getZ())).append(',');

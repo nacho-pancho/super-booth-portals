@@ -4,7 +4,7 @@
  
   <groupId>net.ddns.gongorg.superboothportals</groupId>
   <artifactId>SuperBoothPortals</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
   <packaging>jar</packaging>
   
   <name>SuperBoothPortals Plugin for Bukkit</name>

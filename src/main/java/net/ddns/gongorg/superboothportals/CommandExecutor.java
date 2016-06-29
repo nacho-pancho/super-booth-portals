@@ -44,6 +44,11 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                     plugin.storage.backupCSV();
                     sender.sendMessage(ChatColor.GREEN + "Backup created.");
                 }
+            } else if (subcmd.equalsIgnoreCase("restore")) {
+                if (sender.hasPermission("boothportals.restore")) {
+                    plugin.storage.restoreCSV();
+                    sender.sendMessage(ChatColor.GREEN + "Restored from backup.");
+                }
             } else if (subcmd.equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("boothportals.reload")) {
                     plugin.storage.loadCSV();
@@ -93,7 +98,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
     private void printHelp() {
         StringBuffer sb = new StringBuffer("BoothPortals usage:\n");
         sb.append("\tbooth [command [args]]\n");
-        sb.append("Where command can be: list, load, save, backup, disable, enable, tp.");
+        sb.append("Where command can be: list, reload, save, backup, restore, disable, enable, tp.");
         plugin.log.info(sb.toString());
     }
 }

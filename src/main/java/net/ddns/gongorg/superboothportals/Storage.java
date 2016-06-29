@@ -56,10 +56,19 @@ final class Storage {
         saveCSV(dataFile);
     }
 
+    void loadCSV() {
+	loadCSV(dataFile);
+    }
+
     void backupCSV() {
         saveCSV(backupFile);
     }
 
+
+    void restoreCSV() {
+        loadCSV(backupFile);
+	saveCSV(dataFile);
+    }
     /*
      * srcworld,srcx, srcy, srcz, doorx, doory, doorz, destworld, destx, desty,
      * destz, enabled
@@ -75,12 +84,12 @@ final class Storage {
                 String dest = p.hasDestination()? p.getDestinationName() : "null";
                 StringBuffer line = new StringBuffer(n);
                 line.append(',');
-                line.append(src.getWorld().getUID()).append(',');
+                //line.append(src.getWorld().getUID()).append(',');
+                line.append(src.getWorld().getName()).append(',');
                 line.append(src.getX()).append(',').append(src.getY())
                         .append(',').append(src.getZ()).append(',');
                 line.append(door.getX()).append(',').append(door.getY())
                         .append(',').append(door.getZ()).append(',');
-		//		line.append(p.getRadius()).append(',');
                 line.append(dest).append(',');
                 line.append(p.isEnabled());
                 out.println(line);
@@ -91,10 +100,10 @@ final class Storage {
         }
     }
 
-    void loadCSV() {
+    void loadCSV(String fname) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(dataFile)));
+                    new FileInputStream(fname)));
             String line;
             while ((line = in.readLine()) != null) {
                 Location src;
@@ -103,21 +112,28 @@ final class Storage {
 
                 StringTokenizer tokenizer = new StringTokenizer(line, ",");
                 String tok;
-                java.util.UUID w;
+                //java.util.UUID w;
+		String w;
                 double x, y, z;
                 boolean enabled;
 
                 tok = tokenizer.nextToken();
                 name = tok;
                 tok = tokenizer.nextToken();
-                w = java.util.UUID.fromString(tok);
+                //w = java.util.UUID.fromString(tok);
+		w = tok;
                 tok = tokenizer.nextToken();
                 x = Double.parseDouble(tok);
                 tok = tokenizer.nextToken();
                 y = Double.parseDouble(tok);
                 tok = tokenizer.nextToken();
                 z = Double.parseDouble(tok);
-                src = new Location(plugin.getServer().getWorld(w), x, y, z);
+
+		org.bukkit.World world = plugin.getServer().getWorld(w);
+		if (world == null) {
+		    world = plugin.getServer().createWorld(new org.bukkit.WorldCreator(w));
+		}
+                src = new Location(world, x, y, z);
 
                 tok = tokenizer.nextToken();
                 x = Double.parseDouble(tok);
@@ -125,7 +141,7 @@ final class Storage {
                 y = Double.parseDouble(tok);
                 tok = tokenizer.nextToken();
                 z = Double.parseDouble(tok);
-                door = new Location(plugin.getServer().getWorld(w), x, y, z);
+                door = new Location(world, x, y, z);
 
 		//                tok = tokenizer.nextToken();
                 //int r = Integer.parseInt(tok);

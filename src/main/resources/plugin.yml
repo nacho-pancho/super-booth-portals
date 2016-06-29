@@ -1,6 +1,6 @@
 name: SuperBoothPortals
 main: net.ddns.gongorg.superboothportals.SuperBoothPortals
-version: 0.2
+version: 0.3
 commands: 
   booth:
     description: Main command. Type as is for help

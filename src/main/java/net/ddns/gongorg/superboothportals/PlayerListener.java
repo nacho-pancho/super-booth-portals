@@ -118,7 +118,7 @@ public class PlayerListener implements Listener {
         // player.setFlying(true); // to avoid falling down to unloaded chunk
         // pieces!
         final Chunk chunk = dest.getChunk();
-        if (!world.isChunkLoaded(chunk)) {
+        if (!chunk.isLoaded()) {
             chunk.load();
         }
 	// see who is inside the booth. The one who closes the door must still be inside the booth,
@@ -127,10 +127,10 @@ public class PlayerListener implements Listener {
 	int radius = srcPortal.getRadius()*2;
 	List<Entity> nearbyEntities = player.getNearbyEntities(radius,1,radius);
 	Location srcLoc = srcPortal.getSourceLocation();
-	plugin.log.debugLoc("Portal source ",srcLoc);
+	plugin.log.debug("Source at " + srcLoc);
 	plugin.log.debug("Found " + nearbyEntities.size() + " entities near the player.");
         try {
-            while (!world.isChunkLoaded(chunk)) {
+            while (!chunk.isLoaded()) {
                 player.setVelocity(new Vector(0, 0, 0));
                 Thread.sleep(200);
             }
@@ -153,6 +153,7 @@ public class PlayerListener implements Listener {
 	    plugin.log.debugLoc("From ", ploc);
 	    Location offset = ploc.subtract(srcLoc);
 	    plugin.log.debugLoc("Offset ",offset);
+	    offset.setWorld(dest.getWorld());
 	    dest.add(offset);
 	    plugin.log.debugLoc("To ", dest);
             player.teleport(dest);
