@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 //import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-//import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -89,6 +89,21 @@ public class BlockListener implements org.bukkit.event.Listener {
 	if (newPortal != null) {	    
 	    plugin.addPortal(newPortal);
 	}
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        Location loc = block.getLocation();
+	
+        for (Portal p : plugin.portals.values()) {
+            if (p.isDoorBlock(loc)) {
+                plugin.removePortal(p.getName());
+                return;
+            }
+        }
+
     }
 
     private final void debugLoc(String prefix, Location l) {  // only for debugging

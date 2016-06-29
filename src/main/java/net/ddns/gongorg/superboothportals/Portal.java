@@ -47,7 +47,7 @@ public final class Portal implements java.io.Serializable {
     }
 
     public String toString() {
-        return "Portal at " + printXYZ(sourceLocation) + ", radius " + getRadius() + ", from " + name + " to " + destinationName ;
+        return "Portal \"" + name + "\" at " + printXYZ(sourceLocation) + ", radius " + getRadius();
 
     }
 

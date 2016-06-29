@@ -2,7 +2,7 @@ package net.ddns.gongorg.superboothportals;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-//import org.bukkit.entity.Player;
+import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 
 /**
@@ -59,10 +59,31 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                     plugin.resumePortals();
                     sender.sendMessage(ChatColor.GREEN + "Portals resumed. ");
                 }
+	    }	else if (subcmd.equalsIgnoreCase("tp")) {
+                if (sender.hasPermission("boothportals.tp")) {
+                    if (args.length == 3) { 
+			String playerName = args[1];
+			String portalName = args[2];
+			Player player = plugin.getServer().getPlayer(playerName);
+			if (player == null) {
+			    sender.sendMessage(ChatColor.RED + "Player " + playerName + " not found.");
+			    return true;
+			}
+			Portal portal = plugin.getPortal(portalName);
+			if (portal == null) {
+			    sender.sendMessage(ChatColor.RED + "Portal " + portalName + " not found.");
+			    return true;
+			}
+			sender.sendMessage(ChatColor.GREEN + "Teleporting user " + playerName  + " to portal " + portalName);
+			player.teleport(portal.getSourceLocation());
+		    } else {
+			sender.sendMessage(ChatColor.RED + "Wrong command syntax. See help.");
+		    }
+                }
             } else {
                 plugin.log
-                        .info("Unknown BoothPortals command. Type booth <enter> for a list.");
-            }
+		    .info("Unknown BoothPortals command. Type booth <enter> for a list.");
+	    }
             return true;
         } else {
             return false;
@@ -72,7 +93,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
     private void printHelp() {
         StringBuffer sb = new StringBuffer("BoothPortals usage:\n");
         sb.append("\tbooth [command [args]]\n");
-        sb.append("Where command can be: list, load, save, backup, disable, enable.");
+        sb.append("Where command can be: list, load, save, backup, disable, enable, tp.");
         plugin.log.info(sb.toString());
     }
 }

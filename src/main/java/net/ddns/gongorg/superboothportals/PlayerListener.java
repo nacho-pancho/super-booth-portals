@@ -109,10 +109,10 @@ public class PlayerListener implements Listener {
             plugin.log.debug("Portal leads nowhere");
             return;
         }
-        if (world.getBlockAt(dest).getType() != Material.AIR) {
-            plugin.log.debug("Portal destination is not empty (." + world.getBlockAt(dest).getType() + ").");
-            return;
-        }
+       // if (world.getBlockAt(dest).getType() != Material.AIR) {
+       //     plugin.log.debug("Portal destination is not empty (." + world.getBlockAt(dest).getType() + ").");
+       //     return;
+       // }
 	
         plugin.log.info("Teleporting player to \"" + srcPortal.getDestinationName() + "\":" + dest);
         // player.setFlying(true); // to avoid falling down to unloaded chunk
@@ -178,12 +178,12 @@ public class PlayerListener implements Listener {
         // in which case the portal is removed
         // we also notify the user of this
         //
-        for (Portal p : plugin.portals.values()) {
-            if (p.isDoorBlock(bl)) {
-                plugin.removePortal(p.getName());
-                return;
-            }
-        }
+        // for (Portal p : plugin.portals.values()) {
+        //     if (p.isDoorBlock(bl)) {
+        //         plugin.removePortal(p.getName());
+        //         return;
+        //     }
+        // }
         //
         // if it is another part of an active portal,
         // disallow this
@@ -241,9 +241,19 @@ public class PlayerListener implements Listener {
             plugin.log.debug("Change destination to \"" + newDest + "\"");
             sign.setLine(0, "Portal to");
             sign.setLine(1, newDest == null ? "NOWHERE" : newDest);
-            sign.setLine(2, null);
-            sign.update();
-            }
-            srcPortal.setDestinationName(newDest);
-        }
+            sign.setLine(2, "");
+            boolean res = sign.update(true);
+	    if (res == false) { 
+		plugin.log.debug("Failed to update sign text!"); 
+	    } else {
+		plugin.log.debug("Sign state text reads \"" + java.util.Arrays.toString(sign.getLines()));
+		sign = (Sign) block.getState();
+		plugin.log.debug("Reread: sign text reads \"" + java.util.Arrays.toString(sign.getLines()));
+		block = event.getClickedBlock();
+		sign = (Sign) block.getState();
+		plugin.log.debug("re-reread: sign text reads \"" + java.util.Arrays.toString(sign.getLines()));
+	    }
+	}
+	srcPortal.setDestinationName(newDest);
+    }
 }
