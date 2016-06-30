@@ -40,10 +40,8 @@ public class PlayerListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        //plugin.log.debug("onEvent");
         Block block = event.getClickedBlock();
         Material m = block.getType();
-        //plugin.log.debug("Type: " + m.getClass().getName() + ":" + m);
         if (plugin.isDoor(block)) {
             handleDoorEvent(event);
         } else if (m == Material.WALL_SIGN) {
@@ -103,16 +101,13 @@ public class PlayerListener implements Listener {
         //
         // * determine warp destination; check whether it is empty (must!)
         //
-        Location dest = plugin.getDestination(srcPortal.getDestinationName());
+	Portal destPortal = plugin.getPortal(srcPortal.getDestinationName());
+        Location dest = destPortal.getSourceLocation();
 	plugin.log.debugLoc("Portal dest ",dest);
         if (dest == null) {
             plugin.log.debug("Portal leads nowhere");
             return;
         }
-       // if (world.getBlockAt(dest).getType() != Material.AIR) {
-       //     plugin.log.debug("Portal destination is not empty (." + world.getBlockAt(dest).getType() + ").");
-       //     return;
-       // }
 	
         plugin.log.info("Teleporting player to \"" + srcPortal.getDestinationName() + "\":" + dest);
         // player.setFlying(true); // to avoid falling down to unloaded chunk
@@ -129,6 +124,7 @@ public class PlayerListener implements Listener {
 	Location srcLoc = srcPortal.getSourceLocation();
 	plugin.log.debug("Source at " + srcLoc);
 	plugin.log.debug("Found " + nearbyEntities.size() + " entities near the player.");
+	final double scale = destPortal.getRadius() / srcPortal.getRadius();
         try {
             while (!chunk.isLoaded()) {
                 player.setVelocity(new Vector(0, 0, 0));
@@ -143,15 +139,24 @@ public class PlayerListener implements Listener {
 		    Location offset = eloc.subtract(srcLoc);
 		    plugin.log.debugLoc("Offset ",offset);
 		    Location edest = dest.clone();
+		    if (scale < 1.0) { 
+			offset.setX(offset.getX()*scale);
+			offset.setY(offset.getY()*scale);
+		    } 
 		    edest.add(offset);
 		    plugin.log.debugLoc("To ",edest);
 		    e.teleport(edest);
 		}
 	    }
+	    // shrink relative locations if destination portal is smaller
 	    Location ploc = player.getLocation();
 	    plugin.log.debug("Teleporting player");
 	    plugin.log.debugLoc("From ", ploc);
 	    Location offset = ploc.subtract(srcLoc);
+	    if (scale < 1.0) { 
+		offset.setX(offset.getX()*scale);
+		offset.setY(offset.getY()*scale);
+	    } 
 	    plugin.log.debugLoc("Offset ",offset);
 	    offset.setWorld(dest.getWorld());
 	    dest.add(offset);
@@ -175,17 +180,6 @@ public class PlayerListener implements Listener {
         Block block = event.getClickedBlock();
         Location bl = block.getLocation();
         //
-        // check if we are breaking the door of a portal
-        // in which case the portal is removed
-        // we also notify the user of this
-        //
-        // for (Portal p : plugin.portals.values()) {
-        //     if (p.isDoorBlock(bl)) {
-        //         plugin.removePortal(p.getName());
-        //         return;
-        //     }
-        // }
-        //
         // if it is another part of an active portal,
         // disallow this
         //
@@ -205,8 +199,6 @@ public class PlayerListener implements Listener {
     private void handleSignEvent(PlayerInteractEvent event) {
         plugin.log.debug("sign event");
         Block block = event.getClickedBlock();
-        // sign must be 1 block above center of booth
-	// FIX: only works for portals of radius 1 or if the user is right next to sign
         Location location = block.getLocation().add(0.0,-1.0,0.0);
         Portal srcPortal = plugin.getPortalAt(location);
         // check whether it is an inner booth sign
@@ -221,22 +213,17 @@ public class PlayerListener implements Listener {
         Action action = event.getAction();
 	int srcRadius = srcPortal.getRadius();
         if (action == Action.RIGHT_CLICK_BLOCK) { // go one destination up
-            do { 
-		newDest = plugin.portals.higherKey(newDest);
-		if (newDest == null) {
-		    newDest = plugin.portals.firstKey();
-		}
-		Portal cand = plugin.portals.get(newDest);
-		plugin.log.debug("Minimum radius=" + srcRadius + " + candidate " + cand);
-	    } while (plugin.portals.get(newDest).getRadius() < srcRadius);
+	    newDest = plugin.portals.higherKey(newDest);
+	    if (newDest == null) {
+		newDest = plugin.portals.firstKey();
+	    }
+	    Portal cand = plugin.portals.get(newDest);
         } else if (action == Action.LEFT_CLICK_BLOCK) {
             event.setCancelled(true); // we don't want to break the sign
-	    do {
-		newDest = plugin.portals.lowerKey(newDest);
-		if (newDest == null) {
-		    newDest = plugin.portals.lastKey();
-		}
-	    } while (plugin.portals.get(newDest).getRadius() < srcPortal.getRadius());
+	    newDest = plugin.portals.lowerKey(newDest);
+	    if (newDest == null) {
+		newDest = plugin.portals.lastKey();
+	    }
         }
         if (newDest != null) {
             plugin.log.debug("Change destination to \"" + newDest + "\"");

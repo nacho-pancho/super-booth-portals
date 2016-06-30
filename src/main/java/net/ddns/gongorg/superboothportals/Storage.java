@@ -69,10 +69,6 @@ final class Storage {
         loadCSV(backupFile);
 	saveCSV(dataFile);
     }
-    /*
-     * srcworld,srcx, srcy, srcz, doorx, doory, doorz, destworld, destx, desty,
-     * destz, enabled
-     */
     void saveCSV(String fname) {
         plugin.log.debug("Saving " + plugin.portals.size() + " portals.");
         try {
@@ -84,7 +80,6 @@ final class Storage {
                 String dest = p.hasDestination()? p.getDestinationName() : "null";
                 StringBuffer line = new StringBuffer(n);
                 line.append(',');
-                //line.append(src.getWorld().getUID()).append(',');
                 line.append(src.getWorld().getName()).append(',');
                 line.append(src.getX()).append(',').append(src.getY())
                         .append(',').append(src.getZ()).append(',');
@@ -112,7 +107,6 @@ final class Storage {
 
                 StringTokenizer tokenizer = new StringTokenizer(line, ",");
                 String tok;
-                //java.util.UUID w;
 		String w;
                 double x, y, z;
                 boolean enabled;
@@ -120,7 +114,6 @@ final class Storage {
                 tok = tokenizer.nextToken();
                 name = tok;
                 tok = tokenizer.nextToken();
-                //w = java.util.UUID.fromString(tok);
 		w = tok;
                 tok = tokenizer.nextToken();
                 x = Double.parseDouble(tok);
@@ -142,9 +135,6 @@ final class Storage {
                 tok = tokenizer.nextToken();
                 z = Double.parseDouble(tok);
                 door = new Location(world, x, y, z);
-
-		//                tok = tokenizer.nextToken();
-                //int r = Integer.parseInt(tok);
 
                 Portal p = new Portal(name, src, door);
 

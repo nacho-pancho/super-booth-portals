@@ -1,0 +1,3 @@
+#!/bin/sh
+scp target/SuperBoothPortals-0.3.jar gongorg.ddns.net:Minecraft/spigot/plugins.available/
+

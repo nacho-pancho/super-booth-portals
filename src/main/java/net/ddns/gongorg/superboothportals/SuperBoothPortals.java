@@ -9,16 +9,8 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-//import org.bukkit.Location;
-//import org.bukkit.Server;
-//import org.bukkit.World;
-//import org.bukkit.block.Block;
-//import org.bukkit.configuration.file.FileConfiguration;
-//import org.bukkit.entity.Player;
-
 public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
 
-    // private ArrayList<Material> doorTypes = new ArrayList<Material>();
     /**
      * Logging component.
      */
@@ -131,7 +123,8 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     void addPortal(Portal p) {
-	log.debug("Adding new portal of radius " + p.getRadius() + ": " + p);
+        org.bukkit.Bukkit.broadcastMessage(ChatColor.YELLOW
+					   + i18nResource.getString("add_portal") + " " + p.getName());
         this.portals.put(p.getName(),p);
     }
 
@@ -142,8 +135,9 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
         portals.remove(name);
         for (Portal q : portals.values()) {
             String destName = q.getDestinationName();
-            if ((destName != null) && name.equals(destName)) { // the removed portal is
-                                                      // the destination of q
+            if ((destName != null) && name.equals(destName)) { 
+		// the removed portal is
+		// the destination of q
                 q.setDestinationName(null);
                 q.disable();
                 log.info("Portal " + q + " points nowhere now. Disabled.");

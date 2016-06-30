@@ -1,6 +1,5 @@
 package net.ddns.gongorg.superboothportals;
 
-//import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.BlockFace;
@@ -10,7 +9,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-//import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.Location;
@@ -25,39 +23,10 @@ public class BlockListener implements org.bukkit.event.Listener {
     private final SuperBoothPortals plugin;
 
 
-    /**
-     * Constructor
-     * 
-     * @param plugin
-     *            The plugin to attach to.
-     */
     public BlockListener(final SuperBoothPortals plugin) {
         this.plugin = plugin;
     }
 
-    /**
-     * 
-     * @param event
-     *            The event related to the block placement.
-     * 
-     *            A portal structure is identified by four things:
-     *            1) a door
-     *            2) a sign above the door
-     *            3) a rectangular chamber which is entered through the door,  which must
-     *            be made only of redstone blocks, have at least 3 blocks of height (without counting the roof)
-     *            4) a sign, placed on the wall right behind the (closed) door
-     *            Something like this:
-     *             R | R | R 
-     *            ---+-S-+--- 
-     *             R |   | R 
-     *            ---+---+--- 
-     *             R | D | R
-     * 
-     *            Besides the four redstone columns, a sign must be placed on top of the door
-     *            (which gives the unique name of the portal), and another one must be placed
-     *            inside the portal  (where the S appears).
-     * 
-     */
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
