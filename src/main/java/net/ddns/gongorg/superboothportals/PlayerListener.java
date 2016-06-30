@@ -143,6 +143,7 @@ public class PlayerListener implements Listener {
 			offset.setX(offset.getX()*scale);
 			offset.setY(offset.getY()*scale);
 		    } 
+		    offset.setWorld(edest.getWorld());
 		    edest.add(offset);
 		    plugin.log.debugLoc("To ",edest);
 		    e.teleport(edest);
