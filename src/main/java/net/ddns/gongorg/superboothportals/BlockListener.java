@@ -53,9 +53,15 @@ public class BlockListener implements org.bukkit.event.Listener {
             return;
         
 
-	Portal newPortal = seekPortal(event);
+	//
+	// this is only for testing the permissions mechanism for now; not used
+	//
+	
+	plugin.log.debug("Does " + player.getName() + " have permission to add_portal?: " + player.hasPermission("add_portal"));
 
-	if (newPortal != null) {	    
+	Portal newPortal = seekPortal(event);
+	
+	if (newPortal != null) {
 	    plugin.addPortal(newPortal);
 	}
     }

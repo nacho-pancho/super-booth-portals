@@ -123,31 +123,23 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     void addPortal(Portal p) {
-        org.bukkit.Bukkit.broadcastMessage(ChatColor.YELLOW
-					   + i18nResource.getString("add_portal") + " " + p.getName());
+	String text = i18nResource.getString("added_portal");
+        org.bukkit.Bukkit.broadcastMessage(ChatColor.YELLOW  + text + " " + p.getName());
         this.portals.put(p.getName(),p);
     }
 
     void removePortal(String name) {
         log.info("Removing portal " + name);
-        org.bukkit.Bukkit.broadcastMessage(ChatColor.RED
-                + i18nResource.getString("removed_portal") + " " + name);
+	String text = i18nResource.getString("removed_portal");
+        org.bukkit.Bukkit.broadcastMessage(ChatColor.RED + text + " " + name);
         portals.remove(name);
-        for (Portal q : portals.values()) {
-            String destName = q.getDestinationName();
-            if ((destName != null) && name.equals(destName)) { 
-		// the removed portal is
-		// the destination of q
-                q.setDestinationName(null);
-                q.disable();
-                log.info("Portal " + q + " points nowhere now. Disabled.");
-            }
-        }
     }
 
     String listPortals() {
-        StringBuffer s = new StringBuffer("There are " + portals.size()
-                + " portals.\n");
+	String text = i18nResource.getString("list_portals");
+        StringBuffer s = new StringBuffer(text);
+	text = i18nResource.getString("portals");
+	s.append(" ").append(portals.size()).append(text).append('\n');
         java.util.Iterator<Portal> it = portals.values().iterator();
         while (it.hasNext()) {
             s.append("-").append(it.next()).append('\n');
