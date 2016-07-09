@@ -90,6 +90,7 @@ public final class Portal implements java.io.Serializable {
     }
 
     boolean isBoothBlock(Location l) {
+	if (!l.getWorld().equals(sourceLocation.getWorld())) return false;
         final int y = l.getBlockY();
         final int cy = this.sourceLocation.getBlockY();
         if ((y < cy) || (y - cy > 2))

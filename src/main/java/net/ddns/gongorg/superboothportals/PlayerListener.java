@@ -234,13 +234,6 @@ public class PlayerListener implements Listener {
             boolean res = sign.update(true);
 	    if (res == false) { 
 		plugin.log.debug("Failed to update sign text!"); 
-	    } else {
-		plugin.log.debug("Sign state text reads \"" + java.util.Arrays.toString(sign.getLines()));
-		sign = (Sign) block.getState();
-		plugin.log.debug("Reread: sign text reads \"" + java.util.Arrays.toString(sign.getLines()));
-		block = event.getClickedBlock();
-		sign = (Sign) block.getState();
-		plugin.log.debug("re-reread: sign text reads \"" + java.util.Arrays.toString(sign.getLines()));
 	    }
 	}
 	srcPortal.setDestinationName(newDest);

@@ -9,10 +9,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import java.util.List;
 
 /**
  * block listener
@@ -78,7 +78,27 @@ public class BlockListener implements org.bukkit.event.Listener {
                 return;
             }
         }
+	
+        for (Portal p : plugin.portals.values()) {
+            if (p.isBoothBlock(loc)) {
+		event.setCancelled(true);
+                return;
+            }
+        }
+    }
 
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event) {
+        List<Block> blocks = event.blockList();
+	for (Block b: blocks) {
+	    Location loc = b.getLocation();
+	    for (Portal p : plugin.portals.values()) {
+		if (p.isBoothBlock(loc)) {
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
+	}
     }
 
     private final void debugLoc(String prefix, Location l) {  // only for debugging

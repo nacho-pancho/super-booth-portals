@@ -57,6 +57,7 @@ final class Storage {
     }
 
     void loadCSV() {
+	plugin.portals.clear();
 	loadCSV(dataFile);
     }
 
@@ -66,6 +67,7 @@ final class Storage {
 
 
     void restoreCSV() {
+	plugin.portals.clear();
         loadCSV(backupFile);
 	saveCSV(dataFile);
     }
