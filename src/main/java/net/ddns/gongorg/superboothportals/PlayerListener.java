@@ -163,8 +163,12 @@ public class PlayerListener implements Listener {
 	    dest.add(offset);
 	    plugin.log.debugLoc("To ", dest);
             player.teleport(dest);
+	    //
+	    // thunder effect!
+	    //	    
+	    dest.getWorld().strikeLightningEffect(srcLoc);
             Thread.sleep(200);
-            // player.setFlying(false);
+	    dest.getWorld().strikeLightningEffect(dest);
         } catch (InterruptedException ex) {
             plugin.log.info("Interrupted while sleeping.");
         }

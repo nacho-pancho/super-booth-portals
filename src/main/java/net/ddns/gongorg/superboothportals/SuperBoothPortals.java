@@ -62,7 +62,9 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
         org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new BlockListener(this), this);
         pm.registerEvents(new PlayerListener(this), this);
-        getCommand("booth").setExecutor(new CommandExecutor(this));
+	final CommandExecutor ex = new CommandExecutor(this);
+        getCommand("booth").setExecutor(ex);
+        getCommand("booth").setTabCompleter(ex);
     }
 
     public void onDisable() {

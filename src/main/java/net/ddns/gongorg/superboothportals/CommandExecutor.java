@@ -4,13 +4,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Handle events for all Player related events
  * 
  * @author You
  */
-public class CommandExecutor implements org.bukkit.command.CommandExecutor {
+public class CommandExecutor implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter {
     private final SuperBoothPortals plugin;
 
     public CommandExecutor(SuperBoothPortals instance) {
@@ -66,9 +68,29 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 }
 	    }	else if (subcmd.equalsIgnoreCase("tp")) {
                 if (sender.hasPermission("boothportals.tp")) {
-                    if (args.length == 3) { 
+                    if (args.length >= 3) { 
 			String playerName = args[1];
-			String portalName = args[2];
+			StringBuffer sb = new StringBuffer();
+			for (int i = 2; i < args.length; i++) {
+			    sb.append(args[i]);
+			    if (i < (args.length-1)) {
+				sb.append(' ');
+			    }
+			}
+			/*
+			if ( portalName.charAt(0) == '\"') { // detect multi word argument
+			    StringBuffer pnb = new StringBuffer(portalName.substring(1));
+			    int i = 3;
+			    while ((i < args.length) && (args[i].charAt(args[i].length()-1) != '\"')) {
+				pnb.append(' ').append(args[i]);
+			    }  
+			    if (i < args.length) {
+				pnb.append(' ').append(args[i].substring(0,args[i].length()-1));
+			    }
+			    portalName = pnb.toString();
+			}
+			*/
+			String portalName = sb.toString();
 			Player player = plugin.getServer().getPlayer(playerName);
 			if (player == null) {
 			    sender.sendMessage(ChatColor.RED + "Player " + playerName + " not found.");
@@ -93,6 +115,35 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @todo Return a list of possible destinations for the command "booth tp user dest" 
+     */
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	plugin.log.debug("Tab complete. label=" + label + "args.length=" + args.length + " args[0] = " + args[0]);
+	List<String> sug =  new ArrayList<String>();
+	if (!label.equalsIgnoreCase("booth")) {
+	    return sug;
+	}	
+	if ((args.length < 2) || (args.length > 4)) {
+	    return sug;
+	}
+	if (!args[0].equalsIgnoreCase("tp")) {
+	    return sug;
+	}
+	// user didn't bother to give hint, we return all possible destinations
+	if (args.length == 2 || (args[2].length() == 0)) {
+	    sug.addAll(plugin.portals.keySet());
+	    return sug;
+	}
+	//ok, we've got booth tp someuser xxx<TAB>
+	String hint = args[2];
+	for (String key: plugin.portals.keySet()) {
+	    if (key.startsWith(hint)) sug.add(key);
+	}
+	return sug;
     }
 
     private void printHelp() {
