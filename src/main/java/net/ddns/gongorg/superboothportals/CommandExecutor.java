@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Handle events for all Player related events
@@ -14,6 +15,8 @@ import java.util.ArrayList;
  */
 public class CommandExecutor implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter {
     private final SuperBoothPortals plugin;
+    String[] subcommands = {"list","save","backup","restore","reload","tp","permissions"};
+    //private final List<String> subcommands = Arrays.asList(subcommands);
 
     public CommandExecutor(SuperBoothPortals instance) {
         plugin = instance;
@@ -118,7 +121,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, org.
     }
 
     /**
-     * @todo Return a list of possible destinations for the command "booth tp user dest" 
+     * @todo Autocomplete users
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
@@ -126,22 +129,40 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, org.
 	List<String> sug =  new ArrayList<String>();
 	if (!label.equalsIgnoreCase("booth")) {
 	    return sug;
-	}	
-	if ((args.length < 2) || (args.length > 4)) {
+	} else if (args.length == 0) { // <TAB>: list  all subcommands
+	    return Arrays.asList(subcommands);
+	} else if (args.length == 1) { // booth xxx<TAB>: autocomplete subcommand
+	    String hint = args[0];
+	    for (String key: subcommands) {
+		if (key.startsWith(hint)) 
+		    sug.add(key);
+	    }
 	    return sug;
-	}
-	if (!args[0].equalsIgnoreCase("tp")) {
-	    return sug;
-	}
-	// user didn't bother to give hint, we return all possible destinations
-	if (args.length == 2 || (args[2].length() == 0)) {
-	    sug.addAll(plugin.portals.keySet());
-	    return sug;
-	}
-	//ok, we've got booth tp someuser xxx<TAB>
-	String hint = args[2];
-	for (String key: plugin.portals.keySet()) {
-	    if (key.startsWith(hint)) sug.add(key);
+	} else if (args[0].equalsIgnoreCase("tp")) {
+	    if (args.length == 2) { // booth tp xxx<TAB>: autocomplete user
+		for (Player p: plugin.getServer().getOnlinePlayers()) {
+		    String name = p.getName();
+		    if (name.startsWith(args[1])) {
+			sug.add(name);
+		    }
+		}
+		return sug; // TODO
+	    } else { 
+		if (args[2].length() == 0) { // booth tp user <TAB>
+		    sug.addAll(plugin.portals.keySet());
+		} else {
+		    // booth tp user xxx<TAB>
+		    // concatenate remaining arguments as hint
+		    StringBuffer sb = new StringBuffer(args[2]);
+		    for (int i = 4; i < args.length; i++) {
+			sb.append(' ').append(args[i]);
+		    }	
+		    String hint = sb.toString();
+		    for (String key: plugin.portals.keySet()) {
+			if (key.startsWith(hint)) sug.add(key);
+		    }
+		}
+	    }
 	}
 	return sug;
     }
