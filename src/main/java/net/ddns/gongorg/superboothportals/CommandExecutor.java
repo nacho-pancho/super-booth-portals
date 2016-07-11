@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-
+import java.util.Arrays ;
+import java.util.Collections;
 /**
  * Handle events for all Player related events
  * 
@@ -68,6 +68,34 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, org.
                 if (sender.hasPermission("boothportals.resume")) {
                     plugin.resumePortals();
                     sender.sendMessage(ChatColor.GREEN + "Portals resumed. ");
+                }
+            } else if (subcmd.equalsIgnoreCase("perms")) {
+		String[] aux={"create","destroy","list","backup","restore","load","save","tp"};
+		StringBuffer sb = new StringBuffer("You have permission to:\n");
+		for (String s: Arrays.asList(aux)) {
+		    if (sender.hasPermission("boothportals." + s)) {
+			sb.append(s).append('\n');
+		    }
+		} 
+		sender.sendMessage(ChatColor.GREEN + sb.toString());
+            } else if (subcmd.equalsIgnoreCase("create")) {
+		if (!(sender instanceof org.bukkit.entity.Player)) {
+		    sender.sendMessage(ChatColor.RED + "create can only be issued by a player.");
+		} else {
+		    if (sender.hasPermission("boothportals.create")) {
+			org.bukkit.entity.Player player = (org.bukkit.entity.Player) sender;
+			if (args.length >= 2) {
+			    String name = args[1];
+			    int radius =  (args.length >= 3) ? Integer.parseInt(args[2]): 1;			    
+			    plugin.createPortal(name,player.getLocation(),radius);
+			}
+		    }
+		}
+            } else if (subcmd.equalsIgnoreCase("destroy")) {
+                if (sender.hasPermission("boothportals.destroy")) {
+		    if (args.length > 1) {
+			plugin.removePortal(args[1]);
+		    }
                 }
 	    }	else if (subcmd.equalsIgnoreCase("tp")) {
                 if (sender.hasPermission("boothportals.tp")) {

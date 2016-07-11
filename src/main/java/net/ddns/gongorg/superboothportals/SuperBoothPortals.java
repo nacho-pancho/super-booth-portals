@@ -124,6 +124,14 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
         return player.hasPermission(permissionNode + permission);
     }
 
+    void createPortal(String name, Location loc, int radius) {
+	float direction = loc.getYaw();
+	// determine orientation of portal and create it
+	// 1) add walls
+	// 2) add signs
+	// 3) add door
+    }
+
     void addPortal(Portal p) {
 	String text = i18nResource.getString("added_portal");
         org.bukkit.Bukkit.broadcastMessage(ChatColor.YELLOW  + text + " " + p.getName());
