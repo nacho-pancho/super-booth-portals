@@ -181,7 +181,6 @@ public class PlayerListener implements Listener {
      * are disabled.
      */
     private void handleBreakEvent(PlayerInteractEvent event) {
-        plugin.log.debug("break event");
         Block block = event.getClickedBlock();
         Location bl = block.getLocation();
         //
@@ -202,7 +201,6 @@ public class PlayerListener implements Listener {
      * Clicking on an outer portal sign does nothing.
      */
     private void handleSignEvent(PlayerInteractEvent event) {
-        plugin.log.debug("sign event");
         Block block = event.getClickedBlock();
         Location location = block.getLocation().add(0.0,-1.0,0.0);
         Portal srcPortal = plugin.getPortalAt(location);
