@@ -5,7 +5,7 @@ import java.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.block.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -125,11 +125,68 @@ public class SuperBoothPortals extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     void createPortal(String name, Location loc, int radius) {
-	float direction = loc.getYaw();
-	// determine orientation of portal and create it
-	// 1) add walls
-	// 2) add signs
-	// 3) add door
+	log.debug("Creating portal with name " + name + " location " + loc + " radius " + radius);
+	// first build a cube and then carve out the door
+	int x = loc.getBlockX();
+	int y = loc.getBlockY();
+	int z = loc.getBlockZ();
+	org.bukkit.World world = loc.getWorld();
+	for (int dy = -1; dy <= 3; dy++) {
+	    for (int dx = -radius; dx <= radius; dx++) {
+		for (int dz = -radius; dz <= radius; dz++) {
+		    Material m = (dx == -radius) || (dx == radius) 
+			|| (dz == radius) || (dz == -radius) 
+			|| (dy == -1) || (dy == 3) ? 
+			boothMaterial : Material.AIR;
+		    world.getBlockAt(x+dx,y+dy,z+dz).setType(m);
+		}
+	    }
+	}
+	// carve door and signs: this depends on the orientation
+	float yaw = loc.getYaw();
+	int orient = ((int)((yaw + 45.0)/90.0) % 4);
+	switch (orient) {
+	default: // facing south
+	case 1: // facing north
+	case 2: // facing west
+	case 3:	
+	case 0: // facing east
+	    //
+	    // the door
+	    //
+	    Block b = world.getBlockAt(x+radius,y+1,z); // door
+ 	    b.setType(Material.AIR);
+	    BlockState state = b.getState();
+	    state.setType(Material.AIR);
+	    state.update();
+	    b = world.getBlockAt(x+radius,y,z); // door
+	    b.setType(Material.WOOD_DOOR);
+	    state = b.getState();
+	    state.setType(Material.WOOD_DOOR);
+	    state.update(); // now it shold become a door
+	    //state = b.getState();  
+	    //org.bukkit.material.MaterialData doorData = new org.bukkit.material.Door(Material.DARK_OAK_DOOR,BlockFace.EAST);
+	    //state.setData(doorData);
+	    //state.update();
+	    // 
+	    // sign above door
+	    // 
+	    b = world.getBlockAt(x+radius+1,y+2,z);
+	    b.setType(Material.WALL_SIGN);
+	    Sign signState = (Sign) b.getState();
+	    signState.setLine(0,name);
+	    signState.update();
+	    // 
+	    // sign inside booth
+	    // 
+	    b = world.getBlockAt(x-radius+1,y+1,z);
+	    b.setType(Material.WALL_SIGN);
+	    signState = (Sign) b.getState();
+	    signState.setLine(0,"Portal to");
+	    signState.setLine(1,"NOWHERE");
+	    signState.update();
+	    
+	}
     }
 
     void addPortal(Portal p) {
