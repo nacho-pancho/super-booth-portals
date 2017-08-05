@@ -184,7 +184,7 @@ public class BlockListener implements org.bukkit.event.Listener {
         }
         // check for inner sign, the one that points to the destination
         // it must be facing to the same side as the other sign
-        //
+        // also determine booth radius
 	int boothRadius = 1; 
 	Location innerSignLoc = doorLoc.clone();
 	innerSignLoc.add(up).add(back); // first potential location 
@@ -203,6 +203,21 @@ public class BlockListener implements org.bukkit.event.Listener {
 	//
 	// found sign and potential booth radius. Now scan for booth structure
 	//
+	//  ---
+	// | s |   s: inner sign
+	// |   |   S: outer sign (gives name to portal)
+	// |   |   D: door
+	//  -D-  
+	//   S
+	//
+	// scan is done as follows (* marks start position)
+	//
+	//    <-*->
+	//    |   |
+	//    |   |
+	//    v   v
+	//    -> <-
+	//    
         Location l2 = innerSignLoc.clone().add(back);
 	Location l1 = l2.clone().add(down);
 	Location l3 = l2.clone().add(up);
@@ -215,11 +230,12 @@ public class BlockListener implements org.bukkit.event.Listener {
 	Location r1 = l1.clone();
 	Location r2 = l2.clone();
 	Location r3 = l3.clone();
-	// check back wall, determine radius
+	// 2) check back wall: corners are optional
+	//
 	int i;
 	plugin.log.debug("Checking back wall starting at ");
 	debugLoc(" l2=",l2);
-	for (i = 1; i <= boothRadius; i++) {
+	for (i = 1; i < boothRadius; i++) {
 	    l1.add(left); l2.add(left); l3.add(left);
 	    r1.add(right); r2.add(right); r3.add(right);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -234,16 +250,19 @@ public class BlockListener implements org.bukkit.event.Listener {
 		break;
 	    }
 	}
-	if (i < boothRadius) {
+	if (i < (boothRadius-1)) {
 	    plugin.log.debug("Failed back wall check.");
 	    return null; 
 	}
+	// skip corner
+	l1.add(left); l2.add(left); l3.add(left);
+	r1.add(right); r2.add(right); r3.add(right);
 	plugin.log.debug("Checking side walls starting at ");
 	debugLoc(" l2=",l2);
 	debugLoc(" r2=",r2);
 	// check side walls
 	// we are past the corner; go back one step
-	for (i = 1; i <= (2*boothRadius); i++) {
+	for (i = 1; i < (2*boothRadius); i++) {
 	    l1.add(front); l2.add(front); l3.add(front);
 	    r1.add(front); r2.add(front); r3.add(front);
 	    if (!plugin.isBooth(l1.getBlock()) ||
@@ -257,10 +276,12 @@ public class BlockListener implements org.bukkit.event.Listener {
 		break;
 	    }
 	} 
-	if (i < (2*boothRadius)) {
+	if (i < (2*boothRadius-1)) {
 	    plugin.log.debug("Failed side wall check.");
 	    return null;
 	}
+	l1.add(front); l2.add(front); l3.add(front);
+	r1.add(front); r2.add(front); r3.add(front);
 	plugin.log.debug("Checking front walls starting at ");
 	debugLoc(" l2=",l2);
 	debugLoc(" r2=",r2);

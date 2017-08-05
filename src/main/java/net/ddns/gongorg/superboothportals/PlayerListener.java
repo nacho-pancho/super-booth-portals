@@ -52,7 +52,7 @@ public class PlayerListener implements Listener {
     }
 
     private void handleDoorEvent(PlayerInteractEvent event) {
-        plugin.log.debug("door event");
+        //plugin.log.debug("door event");
         if (plugin.isSuspended()) {
             return;
         }
@@ -67,7 +67,7 @@ public class PlayerListener implements Listener {
 
         org.bukkit.material.MaterialData data = doorState.getData();
         if (!(data instanceof org.bukkit.material.Door)) {
-            plugin.log.debug("Not a door??");
+            //plugin.log.debug("Not a door??");
 	    return;
         }
         org.bukkit.material.Door doorData = (org.bukkit.material.Door) data;
@@ -88,13 +88,13 @@ public class PlayerListener implements Listener {
         org.bukkit.World world = location.getWorld();
 	Portal srcPortal = plugin.getPortalAt(location);
         if (srcPortal == null) {
-            plugin.log.debug("Not within a portal.");
+            //plugin.log.debug("Not within a portal.");
             return;
         }
         
         // check if it is enabled
         if (!srcPortal.isEnabled()) { 
-            plugin.log.debug("Portal not enabled.");
+            //plugin.log.debug("Portal not enabled.");
             return; 
         }
 
@@ -124,7 +124,7 @@ public class PlayerListener implements Listener {
 	Location srcLoc = srcPortal.getSourceLocation();
 	plugin.log.debug("Source at " + srcLoc);
 	plugin.log.debug("Found " + nearbyEntities.size() + " entities near the player.");
-	final double scale = destPortal.getRadius() / srcPortal.getRadius();
+	final double scale = (double) destPortal.getRadius() /(double) srcPortal.getRadius();
         try {
             while (!chunk.isLoaded()) {
                 player.setVelocity(new Vector(0, 0, 0));
@@ -166,9 +166,10 @@ public class PlayerListener implements Listener {
 	    //
 	    // thunder effect!
 	    //	    
-	    dest.getWorld().strikeLightningEffect(srcLoc);
-            Thread.sleep(200);
-	    dest.getWorld().strikeLightningEffect(dest);
+	    //dest.getWorld().strikeLightningEffect(srcLoc);
+	    dest.getWorld().playEffect(srcLoc,org.bukkit.Effect.VILLAGER_PLANT_GROW,2);
+	    //dest.getWorld().strikeLightningEffect(dest);
+	    dest.getWorld().playEffect(dest,org.bukkit.Effect.VILLAGER_PLANT_GROW,2);
         } catch (InterruptedException ex) {
             plugin.log.info("Interrupted while sleeping.");
         }

@@ -4,7 +4,7 @@
  
   <groupId>net.ddns.gongorg.superboothportals</groupId>
   <artifactId>SuperBoothPortals</artifactId>
-  <version>0.6</version>
+  <version>0.7</version>
   <packaging>jar</packaging>
   
   <name>SuperBoothPortals Plugin for Bukkit</name>
@@ -22,7 +22,7 @@
            <groupId>org.spigotmc</groupId>
            <artifactId>spigot-api</artifactId>
            <!--<version>1.9.4-R0.1-SNAPSHOT</version>-->
-           <version>1.10.2-R0.1-SNAPSHOT</version>
+           <version>1.12-R0.1-SNAPSHOT</version>
            <scope>provided</scope>
     </dependency>
 
@@ -31,7 +31,7 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <!--<version>1.9.4-R0.1-SNAPSHOT</version>-->
-            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <version>1.12-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
       </dependency>
   </dependencies>
